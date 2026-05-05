@@ -1,0 +1,50 @@
+services:
+  backend:
+    build:
+      context: ./backend
+    image: tracing-ancient-buildings-backend:latest
+    container_name: tracing-ancient-buildings-backend
+    environment:
+      APP_NAME: "Tracing Ancient Buildings Backend"
+      APP_DESCRIPTION: "FastAPI backend for ancient-building tracing, detection, twin, knowledge and screen APIs."
+      ENVIRONMENT: "production"
+      DEBUG: "false"
+      LOG_LEVEL: "INFO"
+      API_V1_PREFIX: "/api/v1"
+      DATABASE_URL: "sqlite+pysqlite:////data/local.db"
+      LOCAL_STORAGE_ROOT: "/data/storage"
+      UPLOAD_PUBLIC_BASE_URL: "/api/v1/uploads/files"
+      CORS_ORIGINS: '["http://localhost:8080","http://127.0.0.1:8080"]'
+      CORS_ORIGIN_REGEX: '^http://(localhost|127\.0\.0\.1|192\.168\.\d+\.\d+|10\.\d+\.\d+\.\d+):\d+'
+    volumes:
+      - gujian-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/healthz', timeout=5).read()"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_BASE_URL: "/"
+    image: tracing-ancient-buildings-frontend:latest
+    container_name: tracing-ancient-buildings-frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1/healthz"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  gujian-data:
