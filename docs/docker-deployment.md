@@ -85,7 +85,16 @@ docker compose down -v
 
 ## 发布镜像
 
-默认发布到阿里云杭州区域：
+默认发布到 GitHub Container Registry：
+
+```text
+ghcr.io/huangjxjx/tracing-ancient-buildings-backend:latest
+ghcr.io/huangjxjx/tracing-ancient-buildings-frontend:latest
+```
+
+仓库包含 `.github/workflows/docker-publish.yml`，推送到 `main` 后会自动构建并发布上述镜像。
+
+也可以手动发布到阿里云杭州区域：
 
 ```text
 registry.cn-hangzhou.aliyuncs.com/huangjxjx/tracing-ancient-buildings-backend:latest

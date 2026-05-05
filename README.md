@@ -10,7 +10,7 @@
 
 ## 快速启动
 
-如果镜像已经发布到阿里云容器镜像服务：
+如果镜像已经由 GitHub Actions 发布到 GHCR：
 
 ```bash
 docker compose -f docker-compose.deploy.yml up -d
@@ -59,8 +59,8 @@ docker compose down -v
 默认镜像名：
 
 ```text
-registry.cn-hangzhou.aliyuncs.com/huangjxjx/tracing-ancient-buildings-backend:latest
-registry.cn-hangzhou.aliyuncs.com/huangjxjx/tracing-ancient-buildings-frontend:latest
+ghcr.io/huangjxjx/tracing-ancient-buildings-backend:latest
+ghcr.io/huangjxjx/tracing-ancient-buildings-frontend:latest
 ```
 
 如果你使用自己的镜像仓库，可以创建 `.env` 覆盖：
@@ -99,6 +99,10 @@ docker compose --env-file .env -f docker-compose.deploy.yml up -d
 二者都通过 Docker volume `gujian-data` 持久化。容器重启不会丢失数据。
 
 ## 发布镜像到阿里云
+
+仓库已经包含 `.github/workflows/docker-publish.yml`，推送到 `main` 后会自动构建并发布 GHCR 镜像。
+
+如果你仍然要发布到阿里云容器镜像服务，先确认命名空间和仓库存在，并登录有推送权限的账号。
 
 登录阿里云容器镜像服务：
 
